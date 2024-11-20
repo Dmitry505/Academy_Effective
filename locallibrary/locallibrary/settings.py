@@ -20,10 +20,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vp@k$w_v9l34mui**d_erqlyywxgble$fmh$hf)4ct05s7=*_!'
+from os import environ as env
+from enum import Enum
+from dotenv import load_dotenv
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+load_dotenv()
+
+SECRET_KEY: str = env.get("SECRET_KEY", "")
+
+DEBUG: bool = bool(env.get("DEBUG", False))
+
 
 ALLOWED_HOSTS = []
 
@@ -39,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'catalog.apps.CatalogConfig', # This object was created for us in /catalog/apps.py
+
+    'isbn_field', #isbn for book model
 ]
 
 MIDDLEWARE = [
