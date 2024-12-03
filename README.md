@@ -59,11 +59,11 @@ https://developer.mozilla.org/ru/docs/Learn/Server-side/Django
 6. Создание миграций  в бд
 
     ```bash
-   py manage.py makemigrations
-   py manage.py migrate
+   poetry run python3 manage.py makemigrations
+   poetry run python3 manage.py migrate
 
 
 7. Запуск сервера
 
     ```bash
-    py manage.py runserver
+    poetry run python3 manage.py runserver
