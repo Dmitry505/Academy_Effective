@@ -1,11 +1,16 @@
+import uuid
+
 from django.db import models
 from django.urls import reverse
 from isbn_field import ISBNField
 
-import uuid
 
 class Genre(models.Model):
-    name = models.CharField(max_length=200, help_text="Enter a book genre (e.g. Science Fiction, French Poetry etc.)")
+    name = models.CharField(
+        max_length=200,
+        help_text="Enter a book genre "
+                  "(e.g. Science Fiction, French Poetry etc.)"
+    )
 
     def __str__(self):
         return self.name
@@ -13,13 +18,17 @@ class Genre(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
-    # Foreign Key used because book can only have one author, but authors can have multiple books
-    # Author as a string rather than object because it hasn't been declared yet in the file.
-    summary = models.TextField(max_length=1000, help_text="Enter a brief description of the book")
+
+    summary = models.TextField(
+        max_length=1000,
+        help_text="Enter a brief description of the book"
+    )
+
     isbn = ISBNField()
-    genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
-    # ManyToManyField used because genre can contain many books. Books can cover many genres.
-    # Genre class has already been defined so we can specify the object above.
+    genre = models.ManyToManyField(
+        Genre,
+        help_text="Select a genre for this book"
+    )
 
     language = models.ForeignKey(
         'Language', on_delete=models.SET_NULL, null=True)
@@ -36,7 +45,11 @@ class Book(models.Model):
     display_genre.short_description = 'Genre'
 
 class BookInstance(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique ID for this particular book across whole library")
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        help_text="Unique ID for this particular book across whole library"
+    )
     book = models.ForeignKey('Book', on_delete=models.SET_NULL, null=True)
     imprint = models.CharField(max_length=200)
     due_back = models.DateField(null=True, blank=True)
@@ -48,7 +61,13 @@ class BookInstance(models.Model):
         ('r', 'Reserved'),
     )
 
-    status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='m', help_text='Book availability')
+    status = models.CharField(
+        max_length=1,
+        choices=LOAN_STATUS,
+        blank=True,
+        default='m',
+        help_text='Book availability'
+    )
 
     class Meta:
         ordering = ["due_back"]
@@ -71,9 +90,12 @@ class Author(models.Model):
         return '%s, %s' % (self.last_name, self.first_name)
 
 class Language(models.Model):
-    name = models.CharField(max_length=200,
-                            unique=True,
-                            help_text="Enter the book's natural language (e.g. English, French, Japanese etc.)")
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+        help_text="Enter the book's natural language "
+                  "(e.g. English, French, Japanese etc.)"
+    )
 
     def get_absolute_url(self):
         return reverse('language-detail', args=[str(self.id)])
