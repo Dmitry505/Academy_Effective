@@ -30,7 +30,6 @@ class Book(models.Model):
         help_text="Select a genre for this book"
     )
 
-
     language = models.ForeignKey(
         'Language', on_delete=models.SET_NULL, null=True)
 

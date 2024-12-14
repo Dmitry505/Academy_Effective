@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'catalog.apps.CatalogConfig',
 
     'isbn_field', #isbn for book model
-
 ]
 
 MIDDLEWARE = [
