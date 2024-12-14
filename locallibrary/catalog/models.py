@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from isbn_field import ISBNField
 
+
 class Genre(models.Model):
     name = models.CharField(
         max_length=200,

@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from .models import Book, Author, BookInstance, Genre
 from django.views import generic
+
+from .models import Author, Book, BookInstance
 
 
 def index(request):
