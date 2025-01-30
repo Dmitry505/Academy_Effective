@@ -14,7 +14,7 @@ class Genre(models.Model):
         "(e.g. Science Fiction, French Poetry etc.)",
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -34,13 +34,13 @@ class Book(models.Model):
         "Language", on_delete=models.SET_NULL, null=True
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("book-detail", args=[str(self.id)])
 
-    def display_genre(self):
+    def display_genre(self) -> str:
         return ", ".join([genre.name for genre in self.genre.all()[:3]])
 
     display_genre.short_description = "Genre"
@@ -78,11 +78,11 @@ class BookInstance(models.Model):
         ordering = ["due_back"]
         permissions = (("can_mark_returned", "Set book as returned"),)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "%s (%s)" % (self.id, self.book.title)
 
     @property
-    def is_overdue(self):
+    def is_overdue(self) -> bool:
         if self.due_back and date.today() > self.due_back:
             return True
         return False
@@ -97,10 +97,10 @@ class Author(models.Model):
     class Meta:
         ordering = ["last_name", "first_name"]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("author-detail", args=[str(self.id)])
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "%s, %s" % (self.last_name, self.first_name)
 
 
@@ -112,8 +112,8 @@ class Language(models.Model):
         "(e.g. English, French, Japanese etc.)",
     )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("language-detail", args=[str(self.id)])
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name

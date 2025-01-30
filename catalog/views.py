@@ -2,17 +2,18 @@ import datetime
 
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.db.models import QuerySet
 
 from .forms import RenewBookForm
 from .models import Author, Book, BookInstance
 
 
-def index(request):
+def index(request: HttpRequest) -> HttpResponse:
     num_books = Book.objects.all().count()
     num_instances = BookInstance.objects.all().count()
     num_instances_available = BookInstance.objects.filter(
@@ -66,7 +67,7 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
     template_name = "catalog/bookinstance_list_borrowed_user.html"
     paginate_by = 10
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         return (
             BookInstance.objects.filter(borrower=self.request.user)
             .filter(status__exact="o")
@@ -75,7 +76,7 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
 
 
 @permission_required("catalog.can_mark_returned")
-def renew_book_librarian(request, pk):
+def renew_book_librarian(request: HttpRequest, pk: int) -> HttpResponse:
     """
     View function for renewing a specific BookInstance by librarian
     """
