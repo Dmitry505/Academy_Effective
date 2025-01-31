@@ -8,6 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.db.models import QuerySet
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .forms import RenewBookForm
 from .models import Author, Book, BookInstance
@@ -73,6 +74,16 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
             .filter(status__exact="o")
             .order_by("due_back")
         )
+
+class LoanedBooksAllListView(PermissionRequiredMixin, generic.ListView):
+    """Generic class-based view listing all books on loan. Only visible to users with can_mark_returned permission."""
+    model = BookInstance
+    permission_required = 'catalog.can_view_book_instance'
+    template_name = 'catalog/bookinstance_list_borrowed_all.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return BookInstance.objects.filter(status__exact='o').order_by('due_back')
 
 
 @permission_required("catalog.can_mark_returned")
