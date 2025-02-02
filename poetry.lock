@@ -119,6 +119,24 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-csp"
+version = "3.8"
+description = "Django Content Security Policy support."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django_csp-3.8-py3-none-any.whl", hash = "sha256:19b2978b03fcd73517d7d67acbc04fbbcaec0facc3e83baa502965892d1e0719"},
+    {file = "django_csp-3.8.tar.gz", hash = "sha256:ef0f1a9f7d8da68ae6e169c02e9ac661c0ecf04db70e0d1d85640512a68471c0"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[package.extras]
+jinja2 = ["jinja2 (>=2.9.6)"]
+tests = ["jinja2 (>=2.9.6)", "pytest", "pytest-cov", "pytest-django", "pytest-ruff"]
+
+[[package]]
 name = "django-isbn-field"
 version = "0.5.3"
 description = "Provides a model and form fields to manage and validate ISBN numbers"
@@ -132,6 +150,17 @@ files = [
 Django = "*"
 python-stdnum = ">=1.5"
 six = "*"
+
+[[package]]
+name = "django-ratelimit"
+version = "4.1.0"
+description = "Cache-based rate-limiting for Django."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-ratelimit-4.1.0.tar.gz", hash = "sha256:555943b283045b917ad59f196829530d63be2a39adb72788d985b90c81ba808b"},
+    {file = "django_ratelimit-4.1.0-py2.py3-none-any.whl", hash = "sha256:d047a31cf94d83ef1465d7543ca66c6fc16695559b5f8d814d1b51df15110b92"},
+]
 
 [[package]]
 name = "django-stubs"
@@ -502,4 +531,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "9cbb42f6d2822ae0c9a3ddc77cd65e19d32101f9dace278a4c158d0080d862bc"
+content-hash = "13eb52996a149bd65b4c3c7e003a61bf13c90b84705a70dedc9858b06e4f1f65"

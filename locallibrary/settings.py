@@ -58,6 +58,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'csp.middleware.CSPMiddleware',
+    'django_ratelimit.middleware.RatelimitMiddleware'
 ]
 
 ROOT_URLCONF = "locallibrary.urls"
@@ -159,3 +161,42 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://academyeffective-production.up.railway.app']
+
+# web security
+if DEBUG:
+    SECURE_SSL_REDIRECT = False
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_PRELOAD = False
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+else:
+    # HTTPS
+    SECURE_SSL_REDIRECT = True
+
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    SECURE_HSTS_SECONDS = 31_536_000  # 1 год
+    SECURE_HSTS_PRELOAD = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # security headers
+    CSP_DEFAULT_SRC = ["'self'"]  # Разрешает загрузку ресурсов только с текущего домена
+    CSP_SCRIPT_SRC = ["'self'", "https://cdn.example.com"]  # Разрешает скрипты из указанных источников
+    CSP_IMG_SRC = ["'self'", "data:"]  # Разрешает изображения с текущего домена и data: URI
+    CSP_FONT_SRC = ["'self'"]  # Разрешает шрифты только с текущего домена
+    CSP_CONNECT_SRC = ["'self'"]  # Ограничивает источники для AJAX-запросов
+    CSP_FRAME_ANCESTORS = ["'none'"]  # Запрещает встраивание сайта в <iframe> (защита от clickjacking)
+    SECURE_CONTENT_TYPE_NOSNIFF = True # Защита от MIME
+
+    # rate limiting
+    RATELIMIT_ENABLE = True
+    RATELIMIT_GLOBAL = '100/h' # Глобальный лимит на 100 запросов/час на IP
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
