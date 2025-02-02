@@ -1,14 +1,16 @@
 import datetime
 
 from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+)
+from django.db.models import QuerySet
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.db.models import QuerySet
-from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .forms import RenewBookForm
 from .models import Author, Book, BookInstance
@@ -52,6 +54,7 @@ class BookDetailView(generic.DetailView):
 
 class AuthorListView(generic.ListView):
     model = Author
+    paginate_by = 10
 
 
 class AuthorDetailView(generic.DetailView):
@@ -76,14 +79,14 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
         )
 
 class LoanedBooksAllListView(PermissionRequiredMixin, generic.ListView):
-    """Generic class-based view listing all books on loan. Only visible to users with can_mark_returned permission."""
     model = BookInstance
     permission_required = 'catalog.can_view_book_instance'
     template_name = 'catalog/bookinstance_list_borrowed_all.html'
     paginate_by = 10
 
     def get_queryset(self):
-        return BookInstance.objects.filter(status__exact='o').order_by('due_back')
+        return BookInstance.objects.filter(status__exact='o')\
+                                            .order_by('due_back')
 
 
 @permission_required("catalog.can_mark_returned")
@@ -125,19 +128,22 @@ def renew_book_librarian(request: HttpRequest, pk: int) -> HttpResponse:
     )
 
 
-class AuthorCreate(CreateView):
+class AuthorCreate(PermissionRequiredMixin, CreateView):
     model = Author
     fields = "__all__"
     initial = {
         "date_of_death": "12/10/2016",
     }
+    permission_required = 'catalog.can_add_author'
 
 
-class AuthorUpdate(UpdateView):
+class AuthorUpdate(PermissionRequiredMixin, UpdateView):
     model = Author
     fields = ["first_name", "last_name", "date_of_birth", "date_of_death"]
+    permission_required = 'catalog.can_change_author'
 
 
-class AuthorDelete(DeleteView):
+class AuthorDelete(PermissionRequiredMixin, DeleteView):
     model = Author
     success_url = reverse_lazy("authors")
+    permission_required = 'catalog.can_delete_author'

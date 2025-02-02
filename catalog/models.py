@@ -96,6 +96,9 @@ class Author(models.Model):
 
     class Meta:
         ordering = ["last_name", "first_name"]
+        permissions = (("can_add_author", "Can add author"),
+                       ("can_delete_author", "Can delete author"),
+                       ("can_change_author", "Can change author"),)
 
     def get_absolute_url(self) -> str:
         return reverse("author-detail", args=[str(self.id)])
