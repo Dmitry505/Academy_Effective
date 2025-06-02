@@ -1,15 +1,15 @@
 from django.contrib import admin
-from .models import Author, Genre, Book, BookInstance, Language
 
+from .models import Author, Book, BookInstance, Genre, Language
 
-admin.site.register(Genre)
 admin.site.register(Language)
+admin.site.register(Genre)
 
 class BooksInline(admin.TabularInline):
     model = Book
 
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name', 'date_of_birth', 'date_of_death')
+    list_display =('last_name', 'first_name', 'date_of_birth','date_of_death')
     fields = ['first_name', 'last_name', ('date_of_birth', 'date_of_death')]
     inlines = [BooksInline]
 
