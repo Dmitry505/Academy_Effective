@@ -170,6 +170,10 @@ if DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
+    CSP_DEFAULT_SRC = ["'self'"]
+    CSP_STYLE_SRC = ["'self'", "https://maxcdn.bootstrapcdn.com"]  # Разрешаем загрузку стилей с Bootstrap
+    CSP_SCRIPT_SRC = ["'self'", "https://ajax.googleapis.com", "https://maxcdn.bootstrapcdn.com"]  # Разрешаем загрузку скриптов с jQuery и Bootstrap
+   
 else:
     # HTTPS
     SECURE_SSL_REDIRECT = True

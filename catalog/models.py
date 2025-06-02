@@ -14,7 +14,7 @@ class Genre(models.Model):
         "(e.g. Science Fiction, French Poetry etc.)",
     )
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name
 
 
@@ -34,13 +34,13 @@ class Book(models.Model):
         "Language", on_delete=models.SET_NULL, null=True
     )
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return reverse("book-detail", args=[str(self.id)])
 
-    def display_genre(self) -> str:
+    def display_genre(self):
         return ", ".join([genre.name for genre in self.genre.all()[:3]])
 
     display_genre.short_description = "Genre"
@@ -76,13 +76,13 @@ class BookInstance(models.Model):
 
     class Meta:
         ordering = ["due_back"]
-        permissions = (("can_view_book_instance", "Can view book instance"),)
+        permissions = (("can_mark_returned", "Set book as returned"),)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return "%s (%s)" % (self.id, self.book.title)
 
     @property
-    def is_overdue(self) -> bool:
+    def is_overdue(self):
         if self.due_back and date.today() > self.due_back:
             return True
         return False
@@ -96,14 +96,11 @@ class Author(models.Model):
 
     class Meta:
         ordering = ["last_name", "first_name"]
-        permissions = (("can_add_author", "Can add author"),
-                       ("can_delete_author", "Can delete author"),
-                       ("can_change_author", "Can change author"),)
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return reverse("author-detail", args=[str(self.id)])
 
-    def __str__(self) -> str:
+    def __str__(self):
         return "%s, %s" % (self.last_name, self.first_name)
 
 
@@ -115,8 +112,8 @@ class Language(models.Model):
         "(e.g. English, French, Japanese etc.)",
     )
 
-    def get_absolute_url(self) -> str:
+    def get_absolute_url(self):
         return reverse("language-detail", args=[str(self.id)])
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name
